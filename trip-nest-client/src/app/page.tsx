@@ -1,4 +1,10 @@
+"use client"
+import { useContext } from "react";
+import { useAuth } from "./utils/Provider/authcontext";
+
 export default function Home() {
+  const { user, checkUser } = useAuth();
+  
   return (
     <div className="flex items-center justify-center">
       <img src="https://i.ibb.co/MhD3Pbf/trip-nest-logo-removebg-preview.png" className="h-[100] w-[120px]" alt="" />
