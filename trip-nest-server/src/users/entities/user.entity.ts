@@ -34,8 +34,7 @@ export class User {
   @Column({ nullable: false })
   password: string;
 
-  @BeforeInsert()
-  async HashPassword() {
-    this.password = await bcrypt.hash(this.password, 10);
-  }
+  @ApiProperty()
+  @Column({ nullable: false })
+  role: string;
 }

@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import * as session from 'express-session';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
@@ -14,14 +15,24 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
-  app.enableCors({
-    origin: [
-      'http://localhost:3001'
-    ],
-    methods: ["GET", "POST"],
-    credentials: true,
-  });
+  app.use(
+    session({
+    secret: 'my-secret',
+    resave: false,
+    saveUninitialized: false,
+    cookie:{
+      secure: false,
+      httpOnly: false,
+      maxAge: 30000000
+    }
+    }),
+    );  
 
+  app.enableCors({
+    origin: true,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    credentials: true,
+}); 
   await app.listen(3000);
 }
 bootstrap();

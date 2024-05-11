@@ -15,9 +15,9 @@ export class AuthService {
     return await bcrypt.compare(plainTextPassword, hashedPassword);
   }
 
-  async checkCredentials(username: string, password: string): Promise<boolean> {
+  async checkCredentials(email: string, password: string): Promise<boolean> {
     // Find the user by username
-    const user: User | undefined = await this.usersService.findByUsername(username);
+    const user: User | undefined = await this.usersService.getUserLoginInfoByEmail(email);;
     
     // If the user does not exist, return false
     if (!user) {
@@ -29,9 +29,9 @@ export class AuthService {
     return isPasswordValid;
   }
 
-  async signIn(user: any) {
+  async login(user: any) {
 
-    const isCredentialsValid = await this.checkCredentials(user.username, user.password);
+    const isCredentialsValid = await this.checkCredentials(user.email, user.password);
     if (!isCredentialsValid) {
       throw new UnauthorizedException('Invalid username or password');
     }
