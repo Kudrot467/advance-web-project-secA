@@ -13,7 +13,8 @@ export class UsersController {
   })
   @Post('signup')
   @HttpCode(HttpStatus.CREATED)
-  async signUp(@Body(ValidationPipe) createUserDto: CreateUserDto) {
+  async signUp(@Body((new ValidationPipe())) createUserDto: CreateUserDto) {
+
     return await this.usersService.create(createUserDto);
   }
 

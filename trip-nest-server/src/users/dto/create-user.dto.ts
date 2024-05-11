@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsEmail, IsNotEmpty, IsString, Length, Matches } from "class-validator";
 
 export class CreateUserDto {
 
@@ -26,4 +26,22 @@ export class CreateUserDto {
   @IsNotEmpty()
   @IsString()
   password:string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
+  role:string;
 }
+export class Login{
+  @IsNotEmpty({ message: 'Please enter a valid email' }) 
+  @IsEmail() 
+  @IsString()
+  email:string;
+
+@IsNotEmpty({ message: 'Please enter a valid password' })
+@IsString()
+// @Length(6, undefined, { message: 'Password must be at least 6 characters long' })
+// @Matches(/^(?=.*[0-9].*[0-9])(?=.*[!@#$%^&*].*[!@#$%^&*])/, { message: 'Password must include at least 2 special characters and 2 numbers' })
+password:string;
+}
+
