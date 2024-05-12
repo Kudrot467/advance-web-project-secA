@@ -14,7 +14,7 @@ export class PostsController {
     description:'Post created'
   })
   @Post('createPost')
-  create(@Body(ValidationPipe) createPostDto: CreatePostDto) {
+  create(@Body((new ValidationPipe())) createPostDto: CreatePostDto) {
     return this.postsService.create(createPostDto);
   }
 

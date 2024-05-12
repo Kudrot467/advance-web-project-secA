@@ -7,6 +7,21 @@ export class CreatePostDto {
     @ApiProperty()
     @IsString()
     @IsNotEmpty()
+    name: string;
+
+    @ApiProperty()
+    @IsString()
+    @IsNotEmpty()
+    image_url: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    postedBy: string;
+
+    @ApiProperty()
+    @IsString()
+    @IsNotEmpty()
     postTitle: string;
   
     @ApiProperty()
@@ -19,12 +34,9 @@ export class CreatePostDto {
     @IsString()
     postDetails: string;
   
+  
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
-    postedBy: string;
-  
-    @ApiProperty()
-    @IsDate()
-    postedDate: Date;
+    postedDate: string;
 }
