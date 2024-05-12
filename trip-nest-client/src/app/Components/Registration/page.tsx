@@ -1,11 +1,12 @@
 "use client"
 import Link from 'next/link';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Swal from 'sweetalert2';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { FaEyeSlash } from 'react-icons/fa';
+import { AuthContext } from '@/app/utils/Provider/authcontext';
 
 const registration = () => {
     const [showPassword, setShowPassWord] = useState(false);
@@ -18,6 +19,7 @@ const registration = () => {
         formState: { errors },
       } = useForm();
       const router = useRouter();
+      const { createUser, setProfilePicture } = useContext(AuthContext);
 
       const onSubmit =async (data) => {
         const username = data.username;
@@ -64,6 +66,14 @@ const registration = () => {
           // );
           setisErr(true);
         }
+        createUser(data.email, data.password)
+        .then((result) => {
+          console.log(result.user);
+          setProfilePicture(data.username, data.image_url);
+        })
+        .catch((error) => {
+          console.log(error.message);
+        });
         };
     return (
         <div className="max-w-[1180px] mx-auto">

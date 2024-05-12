@@ -1,17 +1,40 @@
 "use client"
-import { createContext, useContext, useState } from "react";
+import { GoogleAuthProvider, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut,updateProfile } from "firebase/auth";
+import { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import auth from "../../Firebase/firebase.config"
 
-const AuthContext = createContext();
+export const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const[loading,setLoading]=useState(true);
   const router = useRouter();
 
-  const login = (username, password, email, cookie) => {
-    setUser({ username, password, email, cookie });
+  // const login = (username, password, email, cookie) => {
+  //   setUser({ username, password, email, cookie });
+  // };
+
+  const setProfilePicture = (username,image_url) => {
+    return updateProfile(auth.currentUser, {
+      displayName:username,
+      photoURL: image_url,
+    });
   };
+  const googleSignIn=()=>{
+    return signInWithPopup(auth,googleProvider);
+}
+
+const createUser=(email,password)=>{
+  setLoading(true);
+  return createUserWithEmailAndPassword(auth,email,password);
+}
+
+const signIn=(email,password)=>{
+  setLoading(true);
+  return signInWithEmailAndPassword(auth,email,password);
+}
 
   const checkUser = () => {
     console.log("user:  " + user.email);
@@ -22,9 +45,27 @@ export const AuthProvider = ({ children }) => {
       return false;
     }
   };
-  const homego = () => {
-    router.push("/");
-  };
+  useEffect(()=>{
+    const unsubscribe= onAuthStateChanged(auth,currentUser=>{
+            // console.log(currentUser);
+            const userEmail=currentUser?.email||user?.email;
+            const loggedUser={email:userEmail};
+            console.log(loggedUser)
+            setUser(currentUser);
+            setLoading(false);
+             if(currentUser){
+                const userInfo={email: currentUser.email};
+               
+             }
+             else{
+               
+                setLoading(false)
+            }
+    })
+    return ()=>{
+        unsubscribe();
+    }
+},[])
   const logout = () => {
     doSignOut();
   };
@@ -46,7 +87,11 @@ export const AuthProvider = ({ children }) => {
     }
   }
   return (
-    <AuthContext.Provider value={{ user, login, logout, checkUser, homego }}>
+    <AuthContext.Provider value={{ user, loading,
+      setProfilePicture,
+      googleSignIn,
+      createUser,
+      signIn, logout, checkUser }}>
       {children}
     </AuthContext.Provider>
   );
