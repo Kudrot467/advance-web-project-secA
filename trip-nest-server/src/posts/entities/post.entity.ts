@@ -8,7 +8,19 @@ export class Post {
   postId: number;
 
   @ApiProperty()
-  @Column({ unique: true, nullable: false })
+  @Column({ nullable: false })
+  name: string;
+
+  @ApiProperty()
+  @Column({ nullable: false })
+  image_url: string;
+
+  @ApiProperty()
+  @Column({ nullable: false })
+  postedBy:string;
+
+  @ApiProperty()
+  @Column({ nullable: false })
   postTitle: string;
 
   @ApiProperty()
@@ -21,9 +33,5 @@ export class Post {
 
   @ApiProperty()
   @Column({ nullable: false })
-  postedBy:string;
-
-  @ApiProperty()
-  @Column({ type: 'timestamp', nullable: false })
-  postedDate: Date;
+  postedDate: string;
 }

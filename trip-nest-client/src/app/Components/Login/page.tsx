@@ -7,7 +7,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { FaEye, FaEyeSlash, FaGoogle } from "react-icons/fa";
 import Link from "next/link";
-import { useAuth } from "@/app/utils/Provider/authcontext";
+import { AuthContext, useAuth } from "@/app/utils/Provider/authcontext";
 
 export default function Login() {
 //   const router = useRouter();
@@ -17,7 +17,28 @@ export default function Login() {
   const [errch, seterrch] = useState("");
   const [isErr, setisErr] = useState(false);
   const [showPassword, setShowPassWord] = useState(false);
-  const {login,user}=useAuth();
+//   const {login,user}=useAuth();
+const { signIn, googleSignIn } = useContext(AuthContext);
+
+
+  const handleGoogleLog = () => {
+    googleSignIn()
+    .then(result=>{
+      const userInfo={
+        email:result.user?.email,
+        name:result.user?.displayName,
+        image_url:result.user?.photoURL
+      }
+      axios.post('http://localhost:3000/users/signup',userInfo)
+     .then(res=>{
+      console.log(res.data);
+     })
+    })
+    .catch();
+  };
+
+
+
   const onSubmit = async (data) => {
     console.log("Form submitted", data);
     const email=data.email;
@@ -27,55 +48,71 @@ export default function Login() {
       password
     };
 
-    try {
-      const res = await axios.post(
-        "http://localhost:3000/auth/login",
-        userData,
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        }
-      );
+    signIn(email, password)
+    .then((result) => {
+      console.log(result.user);
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "login successful",
+        showConfirmButton: false,
+        timer: 1500
+      });
+     reset();
+    })
+    .catch((error) => {
+      const errorMessage = error.message;
+      console.log(errorMessage);
+      
+    });
+    // try {
+    //   const res = await axios.post(
+    //     "http://localhost:3000/auth/login",
+    //     userData,
+    //     {
+    //       headers: { "Content-Type": "application/json" },
+    //       withCredentials: true,
+    //     }
+    //   );
 
-      console.log(res);
+    //   console.log(res);
 
-      // Check if the response status is successful (e.g., HTTP status code 200)
-      if (res.status >= 200 && res.status < 300) {
-        // You may want to store the authentication token or user information
-        // in the state or context
-        // For example:
-        // localStorage.setItem("token", res.data.token);
+    //   // Check if the response status is successful (e.g., HTTP status code 200)
+    //   if (res.status >= 200 && res.status < 300) {
+    //     // You may want to store the authentication token or user information
+    //     // in the state or context
+    //     // For example:
+    //     // localStorage.setItem("token", res.data.token);
 
-        // Redirect the user to the appropriate page
-        console.log("cookie: " + document.cookie);
-        login(
-          res.data.username,
-          userData.password,
-          userData.email,
-          document.cookie
-        );
-        Swal.fire({
-            position: "center",
-            icon: "success",
-            title: "login successful",
-            showConfirmButton: false,
-            timer: 1500
-          });
-        // router.push({
-        //   pathname: "/",
-        // }); // Replace "/dashboard" with the actual URL
-      }
-    } catch (error) {
-      console.log(error);
-      //alert("Wrong Email or Password");
+    //     // Redirect the user to the appropriate page
+    //     console.log("cookie: " + document.cookie);
+    //     // login(
+    //     //   res.data.username,
+    //     //   userData.password,
+    //     //   userData.email,
+    //     //   document.cookie
+    //     // );
+    //     Swal.fire({
+    //         position: "center",
+    //         icon: "success",
+    //         title: "login successful",
+    //         showConfirmButton: false,
+    //         timer: 1500
+    //       });
+    //     // router.push({
+    //     //   pathname: "/",
+    //     // }); // Replace "/dashboard" with the actual URL
+    //   }
+    // } catch (error) {
+    //   console.log(error);
+    //   //alert("Wrong Email or Password");
 
-      setisErr(true);
-      console.log(errch);
-      reset();
-      // Handle other errors (e.g., network issues, server errors)
-      // You can show an error message, handle it in some way, etc.
-    }
-    console.log(user);
+    //   setisErr(true);
+    //   console.log(errch);
+    //   reset();
+    //   // Handle other errors (e.g., network issues, server errors)
+    //   // You can show an error message, handle it in some way, etc.
+    // }
   };
   return (
     <div className="max-w-[1180px] mx-auto">
@@ -88,10 +125,10 @@ export default function Login() {
             alt=""
           />
         </div>
-        <div className="card w-full md:w-3/4 shadow-2xl bg-base-100 rounded-xl">
+        <div className="card w-full shadow-2xl bg-base-100 rounded-xl">
         
-          <form onSubmit={handleSubmit(onSubmit)} className="card-body p-7 ">
-          <div className="text-center flex items-center">
+          <form onSubmit={handleSubmit(onSubmit)} className="card-body ">
+          <div className="text-center flex flex-col md:flex-row items-center">
           <img src="https://i.ibb.co/MhD3Pbf/trip-nest-logo-removebg-preview.png" className="h-[100] w-[120px]" alt="" />
           <h1 className="font-bold text-[#F7B030]">Login|TripNest</h1>
           </div>
@@ -107,7 +144,7 @@ export default function Login() {
                     {...register("email", { required: true })}
                     placeholder="email"
                     name="email"
-                    className="border-2 border-[#C6A921]"
+                    className="w-full border-2 border-[#C6A921]"
                   />
                   {errors.email && (
                     <span className="text-red-700">*Email is required</span>
@@ -131,7 +168,7 @@ export default function Login() {
                       })}
                       placeholder="password"
                       name="password"
-                      className="border-[#C6A921] border-2"
+                      className="border-[#C6A921] border-2 w-full"
                     />
                     {errors.password?.type === "required" && (
                       <span className="text-red-700">
@@ -149,7 +186,7 @@ export default function Login() {
                       </span>
                     )}
                     <span
-                      className="absolute top-1 right-10"
+                      className="absolute top-1 right-3"
                       onClick={() => setShowPassWord(!showPassword)}
                     >
                       {showPassword ? (
@@ -165,7 +202,7 @@ export default function Login() {
                     Forgot password?
                   </a>
                 </label>
-            <div className="form-control mt-6">
+            <div className="form-control">
              
              <button className="w-full text-white hover:bg-[#C6A921] bg-[#A3CA33] font-medium px-4 py-2 rounded-lg">
                 Login
@@ -180,8 +217,8 @@ export default function Login() {
             </Link>
           </p>
           <div className="flex items-center justify-center my-6 text-[#C6A921]">
-          <FaGoogle></FaGoogle>
-            <button  className="btn  text-[#C6A921] pl-2">
+            <button onClick={handleGoogleLog}  className="btn  text-[#C6A921] pl-2">
+            <FaGoogle></FaGoogle>
               Continue with Google
             </button>
           </div>
