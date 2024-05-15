@@ -2,12 +2,12 @@
 import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { FaEye, FaEyeSlash, FaGoogle } from "react-icons/fa";
 import Link from "next/link";
 import { AuthContext, useAuth } from "@/app/utils/Provider/authcontext";
+import { useRouter } from 'next/navigation';
 
 export default function Login() {
 //   const router = useRouter();
@@ -19,6 +19,7 @@ export default function Login() {
   const [showPassword, setShowPassWord] = useState(false);
 //   const {login,user}=useAuth();
 const { signIn, googleSignIn } = useContext(AuthContext);
+const router=useRouter();
 
 
   const handleGoogleLog = () => {
@@ -50,7 +51,8 @@ const { signIn, googleSignIn } = useContext(AuthContext);
 
     signIn(email, password)
     .then((result) => {
-      console.log(result.user);
+      console.log(result.user.accessToken);
+      localStorage.setItem('accessToken', result.user.accessToken);
       Swal.fire({
         position: "center",
         icon: "success",
@@ -65,6 +67,22 @@ const { signIn, googleSignIn } = useContext(AuthContext);
       console.log(errorMessage);
       
     });
+
+      // try {
+      //   const response = await axios.post('http://localhost:3000/auth/login', { username, password });
+      //   const { access_token } = response.data;
+      //   // Store the token in localStorage or cookies for future requests
+      //   localStorage.setItem('accessToken', access_token);
+      //   console.log(response.data);
+      //   // Redirect to dashboard or any other page upon successful login
+      //   // You can use Next.js router or navigate to do this
+      //   // Example: router.push('/dashboard');
+      //   router.push("/Components/Dashboard");
+      // } catch (error) {
+      //   // setError('Invalid username or password');
+      //   // router.push('/dashboard');
+      // }
+  
     // try {
     //   const res = await axios.post(
     //     "http://localhost:3000/auth/login",
@@ -82,7 +100,7 @@ const { signIn, googleSignIn } = useContext(AuthContext);
     //     // You may want to store the authentication token or user information
     //     // in the state or context
     //     // For example:
-    //     // localStorage.setItem("token", res.data.token);
+    //     localStorage.setItem("token", res.data.token);
 
     //     // Redirect the user to the appropriate page
     //     console.log("cookie: " + document.cookie);
@@ -104,8 +122,8 @@ const { signIn, googleSignIn } = useContext(AuthContext);
     //     // }); // Replace "/dashboard" with the actual URL
     //   }
     // } catch (error) {
-    //   console.log(error);
-    //   //alert("Wrong Email or Password");
+    //   console.log(error);}
+      //alert("Wrong Email or Password");
 
     //   setisErr(true);
     //   console.log(errch);

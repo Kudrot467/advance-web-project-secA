@@ -36,6 +36,10 @@ const signIn=(email,password)=>{
   return signInWithEmailAndPassword(auth,email,password);
 }
 
+const logOut=()=>{
+  setLoading(true);
+  return signOut(auth);
+}
   const checkUser = () => {
     console.log("user:  " + user.email);
     console.log("user:  " + user.cookie);
@@ -55,10 +59,18 @@ const signIn=(email,password)=>{
             setLoading(false);
              if(currentUser){
                 const userInfo={email: currentUser.email};
+            //    axios.post("http://localhost:3000/auth/login",userInfo)
+            //    .then(res=>{
+            //     if(res.data.token)
+            //     {
+            //         localStorage.setItem('access-token',res.data.token)
+            //         setLoading(false);
+            //     }
                
+            // })
              }
              else{
-               
+              // localStorage.removeItem('access-token');
                 setLoading(false)
             }
     })
@@ -91,7 +103,7 @@ const signIn=(email,password)=>{
       setProfilePicture,
       googleSignIn,
       createUser,
-      signIn, logout, checkUser }}>
+      signIn, logout,logOut, checkUser }}>
       {children}
     </AuthContext.Provider>
   );
