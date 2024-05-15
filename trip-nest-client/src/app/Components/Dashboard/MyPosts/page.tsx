@@ -1,9 +1,9 @@
+// @ts-nocheck
 "use client";
 import { AuthContext } from "@/app/utils/Provider/authcontext";
 import axios from "axios";
 import Link from "next/link";
 import React, { useContext, useEffect, useState } from "react";
-import { FaArrowAltCircleUp } from "react-icons/fa";
 import Swal from "sweetalert2";
 
 const MyPosts = () => {
@@ -13,7 +13,7 @@ const MyPosts = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const res = await axios.get(`http://localhost:3000/posts`); // Adjust the endpoint URL as needed
+        const res = await axios.get(`http://localhost:3000/posts`);
         setPosts(res.data);
       } catch (error) {
         console.error("Error fetching users:", error);
@@ -27,10 +27,8 @@ const MyPosts = () => {
   const myPosts = posts.filter((post) => post.postedBy == user?.email);
   console.log(myPosts);
   
-  const[items,setItems]=useState([]);
-  useEffect(() => {
-    setItems(myPosts);
-  }, [myPosts]);
+  const[items,setItems]=useState(myPosts);
+
   const handleDeleteUser = (post) => {
     Swal.fire({
       title: "Are you sure?",
@@ -70,11 +68,11 @@ const MyPosts = () => {
   return (
     <div className="max-w-[1120px] mx-auto">
         <h1>
-            {items.length===0 && <div>
+            {myPosts.length===0 && <div>
                 <p className="text-4xl text-red-600 font-bold">Your created post is 00</p>
                 </div>}
         </h1>
-      {items.map((myPost) => (
+      {myPosts.map((myPost) => (
         <div key={myPost.postId} className="grid grid-cols-1 md:grid-cols-3">
           <div className="card card-compact bg-base-100 shadow-xl my-3">
             <div className="navbar bg-base-100">

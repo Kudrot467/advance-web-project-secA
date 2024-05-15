@@ -5,10 +5,10 @@ import Link from "next/link";
 import React, { useContext, useEffect, useState } from "react";
 
 const Navbar = () => {
-  const{user,logout}=useContext(AuthContext);
+  const{user,logOut}=useContext(AuthContext);
     const[users,setUsers]=useState([]);
     const signOut = () => {
-      logout().then().catch();
+      logOut().then().catch();
     };
   const navItems = [
     {

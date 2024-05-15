@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use client"
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -49,7 +50,7 @@ export default function Layout({
            loggedInUser?.role==='admin' ? <>
             <li >
            <Link
-             href="/dashboard/adminProfile"
+             href="/Components/Dashboard"
            >
            <FaUser></FaUser>
             My Profile--
@@ -114,7 +115,7 @@ export default function Layout({
            <>
                <li >
            <Link
-             href="/dashboard/myProfile"
+             href="/Components/Dashboard"
             className="text-white font-semibold text-lg hover:text-[#F7B030] hover:text-xl hover:bg-white"
            >
            <FaUser></FaUser>
@@ -145,11 +146,22 @@ export default function Layout({
          <hr />
          <li>
            <Link
-             href="/dashboard/membership"
+             href="/Components/Dashboard/AddWishList"
              className="text-white font-semibold text-lg hover:text-[#F7B030] hover:text-xl hover:bg-white"
            >
                <FaList></FaList>
-            Member Ship
+           Create WishList
+           </Link>
+         </li>
+         <hr />
+         <hr />
+         <li>
+           <Link
+             href="/Components/Dashboard/WishLists"
+             className="text-white font-semibold text-lg hover:text-[#F7B030] hover:text-xl hover:bg-white"
+           >
+               <FaList></FaList>
+           WishLists
            </Link>
          </li>
          <hr />

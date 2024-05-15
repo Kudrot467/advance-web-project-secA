@@ -7,10 +7,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { PostsModule } from './posts/posts.module';
 import { CurrencyConverterModule } from './currency-converter/currency-converter.module';
 import { WishlistModule } from './wishlist/wishlist.module';
+import { CommentsModule } from './comments/comments.module';
 import config from 'ormconfig';
 
 @Module({
-  imports: [UsersModule, AuthModule, TypeOrmModule.forRoot(config), PostsModule, CurrencyConverterModule, WishlistModule],
+  imports: [UsersModule, AuthModule, TypeOrmModule.forRoot(config), PostsModule, CurrencyConverterModule, WishlistModule, CommentsModule],
   controllers: [AppController],
   providers: [AppService],
 })
